@@ -87,14 +87,14 @@ User uploads a contract PDF
   │ size     │       |   csv/json │         | (1000/200) │
   └──────────┘       |   txt      │         | + overlap  │
                      └────────────┘         └────────────┘
-                                        │
-                                        v
-  Store                   Embed        Chunks
-  ┌────────┐              ┌────────┐    │
-  │ChromaDB│  ◄────       │ Ollama  ◄──────┘
-  │persist │              │ nomic-
-  │cosine  │              │ embed
-  │dist    │              │ text
+                                                   │
+                                                   v
+  Store                     Embed                Chunks
+  ┌────────┐              ┌────────┐               │
+  │ChromaDB│  ◄────       │ Ollama |        ◄──────┘
+  │persist │              │ nomic- |
+  │cosine  │              │ embed  |
+  │dist    │              │ text   |
   └────────┘              └────────┘
 
   Retrieve (Hybrid)
