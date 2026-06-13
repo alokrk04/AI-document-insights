@@ -457,8 +457,4 @@ docker compose logs -f      # Follow logs
 ```
 
 ---
-
-## License
-
-MIT
 # AI-document-insights
