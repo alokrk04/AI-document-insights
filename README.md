@@ -89,7 +89,7 @@ User uploads a contract PDF
                      └────────────┘         └────────────┘
                                                    │
                                                    v
-  Store                     Embed                Chunks
+    Store                   Embed                Chunks
   ┌────────┐              ┌────────┐               │
   │ChromaDB│  ◄────       │ Ollama |        ◄──────┘
   │persist │              │ nomic- |
