@@ -102,7 +102,7 @@ User uploads a contract PDF
   │  1. Query embedding (Ollama) │
   │  2. Semantic (ChromaDB)      │
   │  3. BM25 keyword scoring     │
-  │  4. Fuse: 0.7*sem + 0.3*bm25│
+  │  4. Fuse: 0.7*sem + 0.3*bm25 │
   │  5. Return top 5 chunks      │
   └──────────────────────────────┘
 ```
