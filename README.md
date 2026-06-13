@@ -38,16 +38,16 @@ User uploads a contract PDF
 
 ```
                     ┌─────────────────────────────────┐
-                    │       Browser (Port 3000)        │
+                    │       Browser (Port 3000)       │
                     │  Next.js 16 + React 19 + TS     │
-                    │                                  │
-                    │  Header │ UploadZone │ DocList   │
-                    │  InsightsPanel │ ChatPanel       │
-                    │  Zustand Store │ API Client      │
+                    │                                 │
+                    │  Header │ UploadZone │ DocList  │
+                    │  InsightsPanel │ ChatPanel      │
+                    │  Zustand Store │ API Client     │
                     └──────────────┬──────────────────┘
                                    │ HTTP REST + SSE
                                    v
-                    ┌─────────────────────────────────┐
+                    ┌───────────────────────────────-──┐
                     │     FastAPI Backend (Port 8000)  │
                     │                                  │
                     │  /api/upload     → process doc   │
@@ -56,7 +56,7 @@ User uploads a contract PDF
                     │  /api/chat       → RAG Q&A       │
                     │  /api/chat/stream→ SSE streaming │
                     │  /api/health     → health check  │
-                    │  /api/ollama/status→ Ollama check │
+                    │  /api/ollama/status→ Ollama check│
                     └───────┬──────────┬──────────┬────┘
                             │          │          │
                     ┌───────┘          │          └──────────┐
@@ -66,7 +66,7 @@ User uploads a contract PDF
             │  pdf / docx  │  │  Persistent  │  │  :11434            │
             │  csv / json  │  │  Collections │  │                    │
             │  txt         │  │  Cosine dist │  │  /api/chat         │
-            │              │  │  Per-doc      │  │  /api/embed        │
+            │              │  │  Per-doc     │  │  /api/embed        │
             │  → pages[]   │  │  doc_{id}    │  │  /api/tags         │
             │  → full_text │  │              │  │                    │
             └──────────────┘  └──────────────┘  │  llama3            │
