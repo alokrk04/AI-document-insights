@@ -79,14 +79,14 @@ User uploads a contract PDF
 ## Processing Pipeline
 
 ```
-  Upload                    Parse                    Chunk
-  ┌────────┐               ┌────────┐              ┌────────┐
-  │ Validate│  ──►  PyMuPDF  │  ──►  Recursive  │
-  │ file    │       python-  │       Char       │
-  │ type/   │       docx     │       Splitter   │
-  │ size    │       csv/json │       (1000/200) │
-  └────────┘       txt       │       + overlap  │
-                   └────────┘       └────────┘
+  Upload                Parse                  Chunk
+  ┌──────────┐       ┌────────────┐         ┌────────────┐
+  │ Validate │  ──►  |   PyMuPDF  │  ──►    | Recursive  │
+  │ file     │       |   python-  │         | Char       │
+  │ type/    │       |   docx     │         | Splitter   │
+  │ size     │       |   csv/json │         | (1000/200) │
+  └──────────┘       |   txt      │         | + overlap  │
+                     └────────────┘         └────────────┘
                                         │
                                         v
   Store                   Embed        Chunks
