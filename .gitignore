@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+node_modules/
+.next/
+.env
+uploads/
+chroma_data/
+*.egg-info/
+dist/
+build/
+.venv/
+.venv_new/

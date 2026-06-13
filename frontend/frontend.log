@@ -1,0 +1,28 @@
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.40:3000
+- Environments: .env.local
+✓ Ready in 318ms
+
+ GET / 200 in 200ms (next.js: 101ms, application-code: 99ms)
+ GET / 200 in 21ms (next.js: 1520µs, application-code: 20ms)
+ GET / 200 in 215ms (next.js: 80ms, application-code: 135ms)
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'map')
+    at InsightsPanel (components/InsightsPanel.tsx:80:40)
+    at Dashboard (app/page.tsx:117:17)
+    at Home (app/page.tsx:130:41)
+  78 |             <Section title="Key Findings" icon="🔍" accent="amber" open={true}>
+  79 |               <ul className="space-y-1.5">
+> 80 |                 {insights.key_findings.map((f, i) => (
+     |                                        ^
+  81 |                   <li key={i} className="flex items-start gap-2.5 text-slate-700 dark:text...
+  82 |                     <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/3...
+  83 |                     <span>{f}</span>
+ GET / 200 in 6.5s (next.js: 3.1s, application-code: 3.4s)
+ GET / 200 in 2.8s (next.js: 1007ms, application-code: 1797ms)
+ GET / 200 in 182ms (next.js: 85ms, application-code: 97ms)
+ GET / 200 in 103ms (next.js: 38ms, application-code: 65ms)
+ GET / 200 in 87ms (next.js: 24ms, application-code: 62ms)
+ GET / 200 in 32ms (next.js: 1756µs, application-code: 30ms)
+ GET / 200 in 20ms (next.js: 1660µs, application-code: 19ms)
+[?25h

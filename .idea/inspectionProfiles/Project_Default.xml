@@ -1,0 +1,50 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PyInterpreterInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredPackages">
+        <list>
+          <option value="transformers" />
+          <option value="torch" />
+          <option value="pandas" />
+          <option value="gunicorn" />
+          <option value="waitress" />
+          <option value="pytest" />
+          <option value="pytest-flask" />
+          <option value="streamlit" />
+          <option value="google-generativeai" />
+          <option value="scikit-learn" />
+          <option value="nltk" />
+          <option value="numpy" />
+          <option value="plotly" />
+          <option value="Pillow" />
+          <option value="python-dotenv" />
+          <option value="requests" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="INFORMATION" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E271" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyStubPackagesAdvertiser" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="pandas-stubs==3.0.0.260204" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="routes.optimize.models" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
