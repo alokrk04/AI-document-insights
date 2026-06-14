@@ -6,6 +6,13 @@ export default function DocumentList({ documents, selectedId, onSelect, onDelete
     indexed: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
     failed: "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800",
   };
+  const statusLabels = {
+    uploaded: "Uploaded",
+    parsing: "Parsing",
+    embedding: "Embedding",
+    indexed: "Uploaded",
+    failed: "Failed",
+  };
   const statusIcons = {
     uploaded: <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>,
     parsing: <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>,
@@ -48,14 +55,12 @@ export default function DocumentList({ documents, selectedId, onSelect, onDelete
             <div className="flex-1 min-w-0">
               <p className={"text-sm font-medium truncate " + (selectedId === doc.id ? "text-accent-700 dark:text-accent-300" : "text-slate-800 dark:text-slate-200")}>{doc.filename}</p>
               <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                {(doc.file_size / 1024).toFixed(1)} KB
-                {doc.page_count ? " · " + doc.page_count + " pg" : ""}
-                {doc.chunk_count ? " · " + doc.chunk_count + " chunks" : ""}
+                {doc.page_count ? doc.page_count + " pages" : ""}
               </p>
               <div className="mt-1.5 flex items-center gap-2">
                 <span className={"inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border " + (statusColors[doc.status] || "")}>
                   {statusIcons[doc.status]}
-                  {doc.status}
+                  {statusLabels[doc.status] || doc.status}
                 </span>
               </div>
             </div>
