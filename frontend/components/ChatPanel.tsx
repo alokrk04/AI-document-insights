@@ -1,10 +1,30 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type KeyboardEvent, type ChangeEvent, type FormEvent, type FocusEvent } from "react";
 
-export default function ChatPanel({ messages, onSend, selectedDocumentId }) {
+interface Source {
+  filename?: string;
+  page_number?: number;
+  score: number;
+}
+
+export interface Message {
+  id: string;
+  role: string;
+  content: string;
+  timestamp: Date;
+  sources?: Source[];
+}
+
+interface ChatPanelProps {
+  messages: Message[];
+  onSend: (msg: string) => void;
+  selectedDocumentId: string | null;
+}
+
+export default function ChatPanel({ messages, onSend, selectedDocumentId }: ChatPanelProps) {
   const [input, setInput] = useState('');
-  const endRef = useRef(null);
-  const inputRef = useRef(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
   useEffect(() => { if (selectedDocumentId) inputRef.current?.focus(); }, [selectedDocumentId]);
   const handleSend = () => {
@@ -12,7 +32,7 @@ export default function ChatPanel({ messages, onSend, selectedDocumentId }) {
     onSend(input);
     setInput('');
   };
-  const handleKey = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } };
+  const handleKey = (e: KeyboardEvent<HTMLTextAreaElement>) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } };
   const msgCount = messages.length;
   return (
     <div className="flex flex-col h-full">
@@ -79,12 +99,12 @@ export default function ChatPanel({ messages, onSend, selectedDocumentId }) {
       <div className="p-4 md:p-5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <div className="flex gap-3 items-end">
           <div className="flex-1 relative">
-            <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
+            <textarea ref={inputRef} value={input} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)} onKeyDown={handleKey}
               placeholder={selectedDocumentId ? "Ask a question about the document..." : "Select a document first..."}
               disabled={!selectedDocumentId} rows={1}
               className="w-full resize-none rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-accent-400/30 focus:border-accent-400 dark:focus:border-accent-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              onInput={e => { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px'; }}
-              onFocus={e => { if (!e.target.value) e.target.style.height = 'auto'; }}
+              onInput={(e: FormEvent<HTMLTextAreaElement>) => { const el = e.target as HTMLTextAreaElement; el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }}
+              onFocus={(e: FocusEvent<HTMLTextAreaElement>) => { if (!e.target.value) (e.target as HTMLTextAreaElement).style.height = 'auto'; }}
             />
           </div>
           <button onClick={handleSend} disabled={!input.trim() || !selectedDocumentId}

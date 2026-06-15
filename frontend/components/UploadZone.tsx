@@ -1,20 +1,25 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, type DragEvent, type ChangeEvent } from "react";
 
-export default function UploadZone({ onUpload, uploading }) {
+interface UploadZoneProps {
+  onUpload: (file: File) => void;
+  uploading: boolean;
+}
+
+export default function UploadZone({ onUpload, uploading }: UploadZoneProps) {
   const [dragging, setDragging] = useState(false);
-  const handleDrop = useCallback(e => {
+  const handleDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault(); setDragging(false);
     const file = e.dataTransfer.files[0];
     if (file) onUpload(file);
   }, [onUpload]);
-  const handleChange = useCallback(e => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onUpload(file);
   }, [onUpload]);
   return (
     <div
-      onDragOver={e => { e.preventDefault(); setDragging(true); }}
+      onDragOver={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       className={"relative rounded-xl p-5 text-center transition-all duration-200 cursor-pointer border-2 border-dashed " + (

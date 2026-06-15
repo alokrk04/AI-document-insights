@@ -1,55 +1,77 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import DocumentList from "@/components/DocumentList";
 import UploadZone from "@/components/UploadZone";
 import InsightsPanel from "@/components/InsightsPanel";
-import ChatPanel from "@/components/ChatPanel";
+import ChatPanel, { type Message } from "@/components/ChatPanel";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
+interface Doc {
+  id: string;
+  status: string;
+  filename?: string;
+  upload_time?: string;
+  file_size?: number;
+  page_count?: number;
+  chunk_count?: number;
+  file_path?: string;
+  full_text?: string;
+}
+
 function Dashboard() {
-  const [documents, setDocuments] = useState([]);
-  const [selectedDocumentId, selectDocument] = useState(null);
-  const [insights, setInsights] = useState(null);
+  const [documents, setDocuments] = useState<Doc[]>([]);
+  const [selectedDocumentId, selectDocument] = useState<string | null>(null);
+  const [insights, setInsights] = useState<Record<string, unknown> | null>(null);
   const [isLoadingInsights, setIsLoadingInsights] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [conversationId, setConversationId] = useState(null);
-  const [isStreaming, setIsStreaming] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(v => !v);
   const toggleDarkMode = () => setDarkMode(v => !v);
 
   useEffect(() => { document.documentElement.classList.toggle("dark", darkMode); }, [darkMode]);
-  useEffect(() => { fetch(API + "/documents").then(r => r.json()).then(setDocuments).catch(() => {}); }, []);
+
+  const fetchWithTimeout = (url: string, timeout = 5000): Promise<Response> => {
+    return Promise.race([
+      fetch(url),
+      new Promise<Response>((_, reject) => setTimeout(() => reject(new Error("timeout")), timeout)),
+    ]);
+  };
+
+  useEffect(() => {
+    fetchWithTimeout(API + "/documents").then(r => r.json()).then(setDocuments).catch(() => {});
+  }, []);
+
   useEffect(() => {
     const hasProcessing = documents.some(d => d.status === "uploaded" || d.status === "parsing" || d.status === "embedding");
     if (!hasProcessing) return;
-    const interval = setInterval(() => fetch(API + "/documents").then(r => r.json()).then(setDocuments).catch(() => {}), 3000);
+    const interval = setInterval(() => fetchWithTimeout(API + "/documents").then(r => r.json()).then(setDocuments).catch(() => {}), 3000);
     return () => clearInterval(interval);
   }, [documents]);
 
   const selectedDoc = documents.find(d => d.id === selectedDocumentId);
 
-  const deleteDoc = async (id) => {
+  const deleteDoc = async (id: string) => {
     try {
       const resp = await fetch(API + "/documents/" + id, { method: "DELETE" });
       if (resp.ok) { setDocuments(prev => prev.filter(d => d.id !== id)); if (selectedDocumentId === id) selectDocument(null); }
-    } catch(e) { console.error(e); }
+    } catch { /* ignore */ }
   };
 
-  const handleUpload = async (file) => {
+  const handleUpload = async (file: File) => {
     setUploading(true);
     try {
       const form = new FormData(); form.append("file", file);
       const resp = await fetch(API + "/upload", { method: "POST", body: form });
-      const doc = await resp.json();
+      const doc: Doc = await resp.json();
       setDocuments(prev => [doc, ...prev]);
       selectDocument(doc.id);
-    } catch(e) { console.error(e); }
+    } catch { /* ignore */ }
     setUploading(false);
   };
 
@@ -58,12 +80,12 @@ function Dashboard() {
     setIsLoadingInsights(true); setInsights(null);
     try {
       const resp = await fetch(API + "/insights/" + selectedDocumentId, { method: "POST" });
-      setInsights(await resp.json());
-    } catch(e) { console.error(e); }
+      setInsights(await resp.json() as Record<string, unknown>);
+    } catch { /* ignore */ }
     setIsLoadingInsights(false);
   };
 
-  const handleChat = async (question) => {
+  const handleChat = async (question: string) => {
     if (!selectedDocumentId || !question.trim()) return;
     const userMsg = { id: Date.now()+"-u", role: "user", content: question, timestamp: new Date() };
     setMessages(prev => [...prev, userMsg]);
@@ -73,11 +95,11 @@ function Dashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ document_id: selectedDocumentId, question, conversation_id: conversationId || undefined }),
       });
-      const result = await resp.json();
+      const result = await resp.json() as { conversation_id: string; answer: string; sources: unknown };
       setConversationId(result.conversation_id);
-      setMessages(prev => [...prev, { id: Date.now()+"-a", role: "assistant", content: result.answer, sources: result.sources, timestamp: new Date() }]);
-    } catch(e) {
-      setMessages(prev => [...prev, { id: Date.now()+"-e", role: "assistant", content: "Error: " + e.message, timestamp: new Date() }]);
+      setMessages(prev => [...prev, { id: Date.now()+"-a", role: "assistant", content: result.answer, sources: result.sources as Message["sources"], timestamp: new Date() }]);
+    } catch {
+      setMessages(prev => [...prev, { id: Date.now()+"-e", role: "assistant", content: "Error: request failed", timestamp: new Date() }]);
     }
   };
 

@@ -1,26 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
-function Section({ title, icon, accent, children, open = true }) {
+interface SectionProps {
+  title: string;
+  icon: string;
+  accent?: string;
+  children: ReactNode;
+  open?: boolean;
+}
+
+function Section({ title, icon, accent = "blue", children, open = true }: SectionProps) {
   const [isOpen, setIsOpen] = useState(open);
-  const accentMap = {
+  const accentMap: Record<string, string> = {
     blue: "border-blue-200 dark:border-blue-800",
     amber: "border-amber-200 dark:border-amber-800",
     red: "border-red-200 dark:border-red-800",
     purple: "border-purple-200 dark:border-purple-800",
     emerald: "border-emerald-200 dark:border-emerald-800",
   };
-  const headerAccentMap = {
+  const headerAccentMap: Record<string, string> = {
     blue: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300",
     amber: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300",
     red: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
     purple: "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300",
     emerald: "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300",
   };
-  const accentColor = accent || "blue";
   return (
-    <div className={"border rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-sm transition-all duration-200 " + accentMap[accentColor]}>
-      <button onClick={() => setIsOpen(!isOpen)} className={"w-full flex items-center justify-between px-4 py-3 text-sm font-semibold transition-colors " + headerAccentMap[accentColor]}>
+    <div className={"border rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-sm transition-all duration-200 " + accentMap[accent]}>
+      <button onClick={() => setIsOpen(!isOpen)} className={"w-full flex items-center justify-between px-4 py-3 text-sm font-semibold transition-colors " + headerAccentMap[accent]}>
         <span className="flex items-center gap-2.5"><span className="text-base">{icon}</span>{title}</span>
         <svg className={"w-4 h-4 transition-transform duration-200 " + (isOpen ? "rotate-180" : "")} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
       </button>
@@ -29,7 +36,27 @@ function Section({ title, icon, accent, children, open = true }) {
   );
 }
 
-export default function InsightsPanel({ insights, isLoading, onGenerate }) {
+interface HighlightedSection {
+  quote: string;
+  explanation: string;
+  source?: string;
+}
+
+interface Insights {
+  executive_summary?: string;
+  key_findings?: string[];
+  action_items?: string[];
+  risks?: string[];
+  highlighted_sections?: HighlightedSection[];
+}
+
+interface InsightsPanelProps {
+  insights: Insights | null;
+  isLoading: boolean;
+  onGenerate: () => void;
+}
+
+export default function InsightsPanel({ insights, isLoading, onGenerate }: InsightsPanelProps) {
   if (isLoading) return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
@@ -37,7 +64,7 @@ export default function InsightsPanel({ insights, isLoading, onGenerate }) {
         <div className="h-8 w-32 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse"></div>
       </div>
       <div className="p-5 space-y-4">
-        {Array(3).fill(0).map((_, i) => (
+        {Array(3).fill(0).map((_: number, i: number) => (
           <div key={i} className="animate-pulse">
             <div className="h-10 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
           </div>
@@ -73,11 +100,11 @@ export default function InsightsPanel({ insights, isLoading, onGenerate }) {
         ) : (
           <>
             <Section title="Executive Summary" icon="📋" accent="blue" open={true}>
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{insights.executive_summary}</p>
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{insights.executive_summary ?? "No summary available."}</p>
             </Section>
             <Section title="Key Findings" icon="🔍" accent="amber" open={true}>
               <ul className="space-y-1.5">
-                {insights.key_findings.map((f, i) => (
+                {(insights.key_findings ?? []).map((f: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-slate-700 dark:text-slate-300">
                     <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-[11px] font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
                     <span>{f}</span>
@@ -87,7 +114,7 @@ export default function InsightsPanel({ insights, isLoading, onGenerate }) {
             </Section>
             <Section title="Action Items" icon="🎯" accent="emerald" open={false}>
               <ul className="space-y-1.5">
-                {insights.action_items.map((a, i) => (
+                {(insights.action_items ?? []).map((a: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-slate-700 dark:text-slate-300">
                     <svg className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     <span>{a}</span>
@@ -97,7 +124,7 @@ export default function InsightsPanel({ insights, isLoading, onGenerate }) {
             </Section>
             <Section title="Risks" icon="⚠️" accent="red" open={false}>
               <ul className="space-y-1.5">
-                {insights.risks.map((r, i) => (
+                {(insights.risks ?? []).map((r: string, i: number) => (
                   <li key={i} className="flex items-start gap-2.5 text-slate-700 dark:text-slate-300">
                     <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center text-[11px] font-bold flex-shrink-0 mt-0.5">!</span>
                     <span>{r}</span>
@@ -107,7 +134,7 @@ export default function InsightsPanel({ insights, isLoading, onGenerate }) {
             </Section>
             <Section title="Highlighted Sections" icon="💡" accent="purple" open={false}>
               <div className="space-y-2.5">
-                {insights.highlighted_sections.map((s, i) => (
+                {(insights.highlighted_sections ?? []).map((s: HighlightedSection, i: number) => (
                   <div key={i} className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700/50">
                     <div className="flex items-start gap-2">
                       <span className="text-purple-400 text-sm leading-none mt-0.5">"</span>

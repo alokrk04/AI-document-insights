@@ -1,11 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function Header({ darkMode, toggleDarkMode, toggleSidebar }) {
+interface HeaderProps {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  toggleSidebar: () => void;
+}
+
+export default function Header({ darkMode, toggleDarkMode, toggleSidebar }: HeaderProps) {
   const [ollamaOk, setOllamaOk] = useState(false);
   useEffect(() => {
     const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-    fetch(api + "/ollama/status").then(r => r.json()).then(d => setOllamaOk(d.available)).catch(() => {});
+    fetch(api + "/ollama/status").then((r: Response) => r.json()).then((d: { available: boolean }) => setOllamaOk(d.available)).catch(() => {});
   }, []);
   return (
     <header className="flex items-center justify-between px-4 md:px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
