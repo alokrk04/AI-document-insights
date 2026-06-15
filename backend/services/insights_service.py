@@ -1,9 +1,12 @@
 """AI Insights generation service."""
 import json
+import os
 import httpx
 from config import OLLAMA_BASE_URL, CHAT_MODEL
 from services.document_service import get_document
 from rag.retriever import hybrid_retrieve
+
+INSIGHTS_MODEL = os.getenv("INSIGHTS_MODEL", "llama3.2")
 
 
 async def generate_insights(document_id: str) -> dict:
@@ -16,31 +19,29 @@ async def generate_insights(document_id: str) -> dict:
     if not full_text:
         return {"error": "No text content available for this document"}
 
-    # Truncate if too long (keep first ~8000 chars for summary generation)
-    text_for_analysis = full_text[:8000]
-    if len(full_text) > 8000:
-        text_for_analysis += "\n\n[... document truncated for analysis ...]"
+    # Truncate to keep generation fast
+    text_for_analysis = full_text[:6000]
+    if len(full_text) > 6000:
+        text_for_analysis += "\n\n[... document truncated ...]"
 
-    prompt = f"""Analyze the following document and provide structured insights in valid JSON format.
-
-Document content:
+    prompt = f"""Document:
 {text_for_analysis}
 
-Return a JSON object with exactly these keys:
-1. "executive_summary": A comprehensive 3-5 sentence executive summary covering purpose, context, and main conclusions.
-2. "key_findings": Array of 5-10 important facts, critical clauses, KPIs, or deliverables as strings.
-3. "action_items": Array of 3-7 deadlines, required actions, or next steps as strings.
-4. "risks": Array of 3-5 risks, liabilities, or compliance issues as strings.
-5. "highlighted_sections": Array of 3-5 objects, each with "quote" (exact important quote from the text), "explanation" (why it's important), and "source" (location reference).
+Return JSON with:
+- "executive_summary": 2-3 sentence summary
+- "key_findings": array of 3-7 key points
+- "action_items": array of 2-5 action items
+- "risks": array of 2-4 risks
+- "highlighted_sections": array of {{"quote", "explanation"}}
 
-IMPORTANT: Return ONLY valid JSON. No markdown, no code fences, no extra text."""
+Return ONLY valid JSON."""
 
     try:
-        async with httpx.AsyncClient(timeout=180.0) as client:
+        async with httpx.AsyncClient(timeout=300.0) as client:
             response = await client.post(
                 f"{OLLAMA_BASE_URL}/api/chat",
                 json={
-                    "model": CHAT_MODEL,
+                    "model": INSIGHTS_MODEL,
                     "messages": [{"role": "user", "content": prompt}],
                     "stream": False,
                     "format": "json",
@@ -48,7 +49,6 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no code fences, no extra text.""
             )
             if response.status_code == 200:
                 content = response.json().get("message", {}).get("content", "{}")
-                # Parse the JSON response
                 insights = json.loads(content)
 
                 return {
