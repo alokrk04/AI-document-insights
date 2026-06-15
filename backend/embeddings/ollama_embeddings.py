@@ -10,24 +10,30 @@ ZERO_VECTOR_768 = [0.0] * 768
 
 async def get_embeddings(texts: list[str]) -> list[list[float]]:
     """Generate embeddings for a list of texts using Ollama."""
-    embeddings = []
-    async with httpx.AsyncClient(timeout=120.0) as client:
-        for text in texts:
+    if not texts:
+        return []
+
+    batch_size = 100
+    all_embeddings = []
+    async with httpx.AsyncClient(timeout=300.0) as client:
+        for i in range(0, len(texts), batch_size):
+            batch = texts[i:i + batch_size]
             try:
                 response = await client.post(
                     f"{OLLAMA_BASE_URL}/api/embed",
-                    json={"model": EMBEDDING_MODEL, "input": text},
+                    json={"model": EMBEDDING_MODEL, "input": batch},
                 )
                 if response.status_code == 200:
                     data = response.json()
-                    embeddings.append(data["embeddings"][0])
+                    all_embeddings.extend(data["embeddings"])
                 else:
-                    logger.warning("Embedding model returned status %d for text (len=%d)", response.status_code, len(text))
-                    embeddings.append(ZERO_VECTOR_768)
+                    logger.warning("Embedding returned status %d for batch (size=%d)", response.status_code, len(batch))
+                    all_embeddings.extend([ZERO_VECTOR_768] * len(batch))
             except Exception as e:
-                logger.warning("Embedding failed for text (len=%d): %s", len(text), e)
-                embeddings.append(ZERO_VECTOR_768)
-    return embeddings
+                logger.warning("Embedding failed for batch (size=%d): %s", len(batch), e)
+                all_embeddings.extend([ZERO_VECTOR_768] * len(batch))
+
+    return all_embeddings
 
 
 async def get_embedding(text: str) -> list[float]:

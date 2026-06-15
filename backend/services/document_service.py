@@ -170,7 +170,7 @@ def to_document_response(doc: dict) -> DocumentResponse:
     return DocumentResponse(
         id=doc["id"],
         filename=doc["filename"],
-        status=doc["status"],
+        status=doc["status"].lower() if isinstance(doc["status"], str) else doc["status"],
         upload_time=doc["upload_time"],
         file_size=doc["file_size"],
         page_count=doc.get("page_count"),
