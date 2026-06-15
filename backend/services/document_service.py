@@ -4,7 +4,7 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from config import UPLOAD_DIR, CHAT_MODEL, EMBEDDING_MODEL, OLLAMA_BASE_URL
 from models.schemas import DocumentResponse, DocumentStatus
@@ -151,7 +151,7 @@ async def process_document(doc_id: str):
     _save_document_store()
 
 
-def create_document_entry(filename: str, file_path: str, file_size: int, doc_id: str | None = None) -> dict:
+def create_document_entry(filename: str, file_path: str, file_size: int, doc_id: Optional[str] = None) -> dict:
     if doc_id is None:
         doc_id = generate_id()
     doc = {
