@@ -28,7 +28,7 @@ export default function UploadZone({ onUpload, uploading }: UploadZoneProps) {
           : "border-slate-200 dark:border-slate-700 hover:border-accent-300 dark:hover:border-accent-600 hover:bg-slate-50 dark:hover:bg-slate-800/50"
       )}
     >
-      <input type="file" accept=".pdf,.docx,.csv,.json,.txt" onChange={handleChange} className="hidden" id="file-upload" />
+      <input type="file" accept=".pdf,.docx,.csv,.json,.txt,.ppt,.pptx" onChange={handleChange} className="hidden" id="file-upload" />
       <label htmlFor="file-upload" className="cursor-pointer block">
         {uploading ? (
           <div className="flex flex-col items-center gap-2.5 py-1">
@@ -42,7 +42,7 @@ export default function UploadZone({ onUpload, uploading }: UploadZoneProps) {
             </div>
             <div>
               <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Drop file or click to upload</p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">PDF, DOCX, CSV, JSON, TXT</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">PDF, DOCX, CSV, JSON, TXT, PPT</p>
             </div>
           </div>
         )}

@@ -130,7 +130,7 @@ function Dashboard() {
                 </div>
                 <h2 className="text-2xl font-bold mb-2 text-slate-800 dark:text-slate-100">Smart AI Document Insights</h2>
                 <p className="text-slate-500 dark:text-slate-400 mb-2">Upload a document to get started with AI-powered analysis</p>
-                <p className="text-xs text-slate-400 dark:text-slate-500">Supports PDF, DOCX, CSV, JSON, TXT</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500">Supports PDF, DOCX, CSV, JSON, TXT, PPT</p>
               </div>
             </div>
           ) : (

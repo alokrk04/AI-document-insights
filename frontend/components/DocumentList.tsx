@@ -42,6 +42,8 @@ export default function DocumentList({ documents, selectedId, onSelect, onDelete
     csv: <span className="text-emerald-500">📗</span>,
     json: <span className="text-amber-500">📙</span>,
     txt: <span className="text-slate-500">📄</span>,
+    ppt: <span className="text-orange-500">📊</span>,
+    pptx: <span className="text-orange-500">📊</span>,
   };
   const getFileIcon = (filename?: string): ReactNode => {
     const ext = filename?.split('.').pop()?.toLowerCase();

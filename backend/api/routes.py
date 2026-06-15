@@ -50,7 +50,7 @@ async def upload_file(file: UploadFile = File(...)):
     if not validate_file_type(file.filename):
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file type. Allowed: .pdf, .docx, .csv, .json, .txt",
+            detail=f"Unsupported file type. Allowed: .pdf, .docx, .csv, .json, .txt, .ppt, .pptx",
         )
 
     content = await file.read()

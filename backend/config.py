@@ -12,7 +12,7 @@ CHROMA_DIR.mkdir(exist_ok=True)
 
 # File settings
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100 MB
-ALLOWED_EXTENSIONS = {".pdf", ".docx", ".csv", ".json", ".txt"}
+ALLOWED_EXTENSIONS = {".pdf", ".docx", ".csv", ".json", ".txt", ".ppt", ".pptx"}
 
 # Ollama settings
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")

@@ -5,6 +5,7 @@ from parsers.docx_parser import parse_docx
 from parsers.csv_parser import parse_csv
 from parsers.json_parser import parse_json
 from parsers.txt_parser import parse_txt
+from parsers.ppt_parser import parse_ppt
 
 
 PARSERS = {
@@ -13,6 +14,8 @@ PARSERS = {
     ".csv": parse_csv,
     ".json": parse_json,
     ".txt": parse_txt,
+    ".ppt": parse_ppt,
+    ".pptx": parse_ppt,
 }
 
 
