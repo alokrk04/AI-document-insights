@@ -2,9 +2,8 @@
 import json
 import os
 import httpx
-from config import OLLAMA_BASE_URL, CHAT_MODEL
+from config import OLLAMA_BASE_URL
 from services.document_service import get_document
-from rag.retriever import hybrid_retrieve
 
 INSIGHTS_MODEL = os.getenv("INSIGHTS_MODEL", "llama3.2")
 

@@ -30,6 +30,3 @@ async def save_upload_file(filename: str, content: bytes, doc_id: str) -> Path:
 def sanitize_filename(filename: str) -> str:
     return os.path.basename(filename)
 
-
-def get_file_extension(filename: str) -> str:
-    return Path(filename).suffix.lower()

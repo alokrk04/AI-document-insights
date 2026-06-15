@@ -3,6 +3,7 @@ import json
 import logging
 import httpx
 from config import OLLAMA_BASE_URL, CHAT_MODEL
+from models.schemas import DocumentStatus
 from rag.retriever import hybrid_retrieve
 from services.document_service import get_document
 

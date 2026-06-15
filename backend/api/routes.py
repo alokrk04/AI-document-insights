@@ -1,10 +1,10 @@
 """API routes for the Smart AI Document Insights application."""
-import os
 import json
 from pathlib import Path
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
 
+from config import UPLOAD_DIR
 from utils.file_utils import validate_file_type, validate_file_size, save_upload_file, generate_id
 from services.document_service import (
     create_document_entry,
@@ -21,6 +21,7 @@ from parsers import parse_document
 from rag.chunker import chunk_text
 from embeddings.ollama_embeddings import get_embeddings
 from vectorstore.chroma_store import store_chunks
+from models.schemas import DocumentStatus
 import aiofiles
 
 router = APIRouter()
@@ -64,28 +65,28 @@ async def upload_file(file: UploadFile = File(...)):
     doc_id = generate_id()
     file_path = await save_upload_file(file.filename, content, doc_id)
 
-    # Create document entry
-    doc = create_document_entry(file.filename, str(file_path), len(content))
+    # Create document entry using the same doc_id
+    doc = create_document_entry(file.filename, str(file_path), len(content), doc_id=doc_id)
 
     # Process inline
     try:
-        doc["status"] = "parsing"
+        doc["status"] = DocumentStatus.PARSING
         parsed = parse_document(Path(str(file_path)))
         doc["page_count"] = parsed["page_count"]
 
         chunks = chunk_text(parsed["pages"], doc["filename"])
         if chunks:
-            doc["status"] = "embedding"
+            doc["status"] = DocumentStatus.EMBEDDING
             texts = [c["content"] for c in chunks]
             embeddings = await get_embeddings(texts)
             store_chunks(doc_id, chunks, embeddings)
-            doc["status"] = "indexed"
+            doc["status"] = DocumentStatus.INDEXED
             doc["chunk_count"] = len(chunks)
             doc["full_text"] = parsed["full_text"]
-            async with aiofiles.open(Path(str(file_path)).parent / f"{doc_id}_data.json", "w") as f:
+            async with aiofiles.open(UPLOAD_DIR / f"{doc_id}_data.json", "w") as f:
                 await f.write(json.dumps(parsed, default=str))
     except Exception as e:
-        doc["status"] = "failed"
+        doc["status"] = DocumentStatus.FAILED
         doc["error"] = str(e)
 
     _save_document_store()
@@ -162,7 +163,7 @@ async def get_insights(doc_id: str):
     doc = get_document(doc_id)
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
-    if doc.get("status") != "indexed":
+    if doc.get("status") != DocumentStatus.INDEXED.value:
         raise HTTPException(status_code=400, detail="Document must be fully processed before generating insights")
 
     insights = await generate_insights(doc_id)
@@ -186,7 +187,7 @@ async def chat_endpoint(request: dict):
     doc = get_document(document_id)
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
-    if doc.get("status") != "indexed":
+    if doc.get("status") != DocumentStatus.INDEXED.value:
         raise HTTPException(status_code=400, detail="Document must be fully processed first")
 
     result = await chat(document_id, question, conversation_id)
