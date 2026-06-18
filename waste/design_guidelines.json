@@ -1,0 +1,99 @@
+Let me view the design guidelines and explore the existing project structure.
+Action: {"type": "mcp_tool", "tool_name": "mcp_view_bulk", "tool_arguments": {"paths": ["/app/design_guidelines.json"]}}
+Observation: ===FILE: /app/design_guidelines.json
+/app/design_guidelines.json:
+1|{
+2|  "theme": "dark",
+3|  "archetype": "7 (Electric & Neon)",
+4|  "typography": {
+5|    "fonts": {
+6|      "headings": "Chivo",
+7|      "body": "Outfit",
+8|      "accent": "JetBrains Mono"
+9|    },
+10|    "hierarchy": {
+11|      "h1": "text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter uppercase",
+12|      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+13|      "h3": "text-xl sm:text-2xl font-semibold tracking-tight",
+14|      "h4": "text-lg sm:text-xl font-medium tracking-tight",
+15|      "body": "text-base leading-relaxed text-slate-300",
+16|      "small": "text-sm text-slate-400",
+17|      "overline": "text-xs font-bold uppercase tracking-[0.2em] font-mono"
+18|    },
+19|    "packages_to_install": [
+20|      "@fontsource/chivo",
+21|      "@fontsource/outfit",
+22|      "@fontsource/jetbrains-mono"
+23|    ]
+24|  },
+25|  "colors": {
+26|    "background": "#050505",
+27|    "surface": "#0a0a0a",
+28|    "surface_hover": "#141414",
+29|    "primary": "#00FF66",
+30|    "primary_foreground": "#000000",
+31|    "secondary": "#00FFFF",
+32|    "secondary_foreground": "#000000",
+33|    "accent": "#FFD700",
+34|    "destructive": "#FF3B30",
+35|    "muted": "#1a1a1a",
+36|    "muted_foreground": "#a1a1aa",
+37|    "border": "#27272a",
+38|    "glass": "bg-black/60 backdrop-blur-2xl border border-white/10"
+39|  },
+40|  "layout": {
+41|    "spacing_scale": "Generous spacing. Use p-8 to p-12 for main containers, gap-8 for bento grids.",
+42|    "container_style": "Grid Borders (The 'Technical' Look). Use sharp edges with 1px border. No soft shadows. Use neon drop-shadows on hover for interactive elements.",
+43|    "border_radius": "rounded-none or max rounded-sm (2px) to maintain a sharp, tactical gaming aesthetic."
+44|  },
+45|  "components": {
+46|    "cards": {
+47|      "base": "bg-[#0a0a0a] border border-[#27272a] rounded-sm p-6 relative overflow-hidden",
+48|      "hover": "hover:border-[#00FF66]/50 hover:shadow-[0_0_15px_rgba(0,255,102,0.1)] transition-all duration-300"
+49|    },
+50|    "buttons": {
+51|      "primary": "bg-[#00FF66] text-black font-mono font-bold uppercase tracking-wider rounded-sm hover:bg-[#00cc52] hover:shadow-[0_0_20px_rgba(0,255,102,0.4)] transition-all",
+52|      "secondary": "bg-transparent border-2 border-[#00FFFF] text-[#00FFFF] font-mono font-bold uppercase tracking-wider rounded-sm hover:bg-[#00FFFF]/10 hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all"
+53|    },
+54|    "inputs": {
+55|      "base": "bg-[#050505] border border-[#27272a] text-white rounded-sm focus:border-[#00FFFF] focus:ring-1 focus:ring-[#00FFFF] font-mono transition-all"
+56|    },
+57|    "progress_bar": {
+58|      "container": "bg-[#1a1a1a] rounded-sm overflow-hidden h-4",
+59|      "fill": "bg-gradient-to-r from-[#00FFFF] to-[#00FF66] shadow-[0_0_10px_rgba(0,255,102,0.5)]"
+60|    }
+61|  },
+62|  "icons": {
+63|    "library": "lucide-react",
+64|    "style": "Sharp, technical, and minimal. Use with brand colors for active states."
+65|  },
+66|  "media": {
+67|    "hero_background": {
+68|      "url": "https://static.prod-images.emergentagent.com/jobs/bd36d370-144d-4a5b-a980-5c6707c23b02/images/c4797af5c1d34af2dca92c36ebeae314c2797a3ab6df234e6e141a1bed5a3e66.png",
+69|      "description": "Dark cyberpunk abstract background texture. Deep void black with subtle glowing cyber grid lines. Use as the main background overlay for the hero section or full app background with opacity.",
+70|      "usage": "Set as background-image, use bg-cover bg-center, overlay with bg-black/80 to maintain readability while keeping the texture."
+71|    },
+72|    "energy_accent": {
+73|      "url": "https://static.prod-images.emergentagent.com/jobs/bd36d370-144d-4a5b-a980-5c6707c23b02/images/f31c0bbecbbd1e730bb61f8052ccdf3a2ced7e1874852b03fb07aa847b3ecf36.png",
+74|      "description": "Glowing abstract neon energy wave. Use to add visual flair to the ATS score result card or success states.",
+75|      "usage": "Absolute positioning inside the score card container with low opacity (10-20%) or blend-mode: screen."
+76|    }
+77|  },
+78|  "animations": {
+79|    "hover": "Fast and snappy transitions. 150ms-300ms.",
+80|    "entrance": "Staggered fade-in-up for bento grid items. Use framer-motion.",
+81|    "glow": "Pulsing box-shadow for high ATS scores (e.g., animate-pulse on the glowing border)."
+82|  },
+83|  "instructions_to_main_agent": [
+84|    "1. Setup Tailwind using the exact colors provided in this JSON.",
+85|    "2. DO NOT use generic rounded borders (like rounded-xl or rounded-2xl). The aesthetic is sharp, tactical, and cyberpunk. Maximum border radius is 2px (rounded-sm).",
+86|    "3. Typography: Implement Chivo for headings (uppercase, tight tracking), Outfit for body text, and JetBrains Mono for numbers, labels, overlines, and code-like elements.",
+87|    "4. Layout: Implement a 'Control Room' Bento grid for the dashboard (e.g., Score in one box, Missing Keywords in another, Bullet Optimizer in a wide box). Ensure 1px borders (#27272a) on all cards.",
+88|    "5. Forms: Override default Shadcn UI styles to remove soft curves. Make inputs square with pure black backgrounds and 1px borders that glow cyan on focus.",
+89|    "6. Use the provided 'hero_background' URL as a subtle, fixed background for the entire application (with a heavy black overlay to ensure text contrast).",
+90|    "7. Implement a glowing gradient progress bar for the ATS Score.",
+91|    "8. Add data-testid attributes to all interactive elements for testing."
+92|  ]
+93|}
+
+===END
