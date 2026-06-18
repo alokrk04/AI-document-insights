@@ -1,0 +1,70 @@
+"/* App-level styles */
+.font-heading {
+  font-family: 'Chivo', sans-serif;
+}
+
+.font-body {
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glass panel effect */
+.glass-panel {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Upload dropzone styling */
+.dropzone-active {
+  border-color: #00FF66 !important;
+  background: rgba(0, 255, 102, 0.05) !important;
+  box-shadow: 0 0 30px rgba(0, 255, 102, 0.15) inset;
+}
+
+/* ATS Progress bar glow */
+.ats-progress-fill {
+  background: linear-gradient(90deg, #00FFFF, #00FF66);
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.5), 0 0 20px rgba(0, 255, 102, 0.2);
+  transition: width 1s ease-out;
+}
+
+/* Score ring */
+.score-ring {
+  background: conic-gradient(
+    #00FF66 var(--score-deg, 0deg),
+    #1a1a1a var(--score-deg, 0deg)
+  );
+}
+
+/* Neon text */
+.text-neon-green {
+  color: #00FF66;
+  text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+}
+
+.text-neon-cyan {
+  color: #00FFFF;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.text-neon-gold {
+  color: #FFD700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Card hover glow */
+.card-glow:hover {
+  border-color: rgba(0, 255, 102, 0.4);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.1);
+}
+
+/* Stagger animation */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+"
